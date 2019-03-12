@@ -16,11 +16,6 @@ from werkzeug.datastructures import Authorization
 
 __version__ = '3.2.4'
 
-''''Set header name that should be checked'''
-''' Defaults to Authorization'''
-CONST_AUTHORIZATION_HEADER = 'Authorization'
-
-
 class HTTPAuth(object):
     def __init__(self, scheme=None, realm=None):
         self.scheme = scheme
@@ -60,12 +55,12 @@ class HTTPAuth(object):
 
     def get_auth(self):
         auth = request.authorization
-        if auth is None and CONST_AUTHORIZATION_HEADER in request.headers:
+        if auth is None and 'Authorization' in request.headers:
             # Flask/Werkzeug do not recognize any authentication types
             # other than Basic or Digest, so here we parse the header by
             # hand
             try:
-                auth_type, token = request.headers[CONST_AUTHORIZATION_HEADER].split(None, 1)
+                auth_type, token = request.headers['Authorization'].split(None, 1)
                 auth = Authorization(auth_type, {'token': token})
             except ValueError:
                 # The Authorization header is either empty or has no token
